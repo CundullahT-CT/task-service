@@ -7,7 +7,7 @@ spring:
       ddl-auto: create
     show-sql: true
   datasource:
-    url: jdbc:postgresql://ticketingtaskdb.chdeqafsju1r.us-east-2.rds.amazonaws.com:5432/ticketingtaskdb
+    url: jdbc:postgresql://ticketingtaskdb.czuphukdntux.eu-central-1.rds.amazonaws.com:5432/ticketingtaskdb
     username: postgres
     password: Cydeo123.
     driver-class-name: org.postgresql.Driver
@@ -18,11 +18,11 @@ server:
 
 keycloak:
   realm: cydeo-dev
-  auth-server-url: http://18.217.74.195:8080/auth
+  auth-server-url: http://3.68.229.53:8080/auth
   ssl-required: none
   resource: ticketing-app
   credentials:
-    secret: 91zEcoABJNDq4i9diaqA7Gq4irDAKBhn
+    secret: uEo1X2yFcEDnO3IKXB1pwCLWUfytf3nl
   use-resource-role-mappings: true
   bearer-only: true
 
