@@ -7,9 +7,9 @@ spring:
       ddl-auto: create
     show-sql: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/ticketing-taskdb
+    url: jdbc:postgresql://ticketingtaskdb.chdeqafsju1r.us-east-2.rds.amazonaws.com:5432/ticketingtaskdb
     username: postgres
-    password: admin
+    password: Cydeo123.
     driver-class-name: org.postgresql.Driver
     initialization-mode: always
 
