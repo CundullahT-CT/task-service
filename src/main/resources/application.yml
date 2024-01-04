@@ -20,7 +20,7 @@ server:
 
 keycloak:
   realm: cydeo-dev
-  auth-server-url: http://18.195.97.74:8080/auth
+  auth-server-url: http://18.185.103.42:8080/auth
   ssl-required: none
   resource: ticketing-app
   credentials:
@@ -41,7 +41,7 @@ eureka:
     health-check-url-path: ${management.context-path}/health
   client:
     serviceUrl:
-      defaultZone: http://3.77.199.64:8761/eureka/
+      defaultZone: http://3.72.87.233:8761/eureka/
 
 management:
   endpoint:
