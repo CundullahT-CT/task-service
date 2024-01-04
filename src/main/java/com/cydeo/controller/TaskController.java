@@ -122,9 +122,9 @@ public class TaskController {
 
     @RolesAllowed("Admin")
     @GetMapping("/count/employee/{assignedEmployee}")
-    public ResponseEntity<ResponseWrapper> getCountByAssignedEmployee(@PathVariable("assignedEmployee") String assignedEmployee) {
+    public ResponseEntity<ResponseWrapper> getNonCompletedCountByAssignedEmployeeByAssignedEmployee(@PathVariable("assignedEmployee") String assignedEmployee) {
 
-        Integer taskCount = taskService.getCountByAssignedEmployee(assignedEmployee);
+        Integer taskCount = taskService.countNonCompletedByAssignedEmployee(assignedEmployee);
 
         return ResponseEntity
                 .ok(ResponseWrapper.builder()

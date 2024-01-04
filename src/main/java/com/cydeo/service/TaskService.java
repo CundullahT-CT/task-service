@@ -15,7 +15,7 @@ public interface TaskService {
     List<TaskDTO> readAllByStatus(Status status);
     List<TaskDTO> readAllByStatusIsNot(Status status);
     Map<String, Integer> getCountsByProject(String projectCode);
-    Integer getCountByAssignedEmployee(String assignedEmployee);
+    Integer countNonCompletedByAssignedEmployee(String assignedEmployee);
 
     TaskDTO update(String taskCode, TaskDTO taskDTO);
     TaskDTO updateStatus(String taskCode, Status status);

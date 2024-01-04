@@ -106,8 +106,8 @@ public class TaskServiceImpl implements TaskService {
 
         checkManagerAccess(keycloakService.getUsername(), projectCode);
 
-        int completedTaskCount = taskRepository.totalCompletedTasks(projectCode);
-        int nonCompletedTaskCount = taskRepository.totalNonCompletedTasks(projectCode);
+        int completedTaskCount = taskRepository.totalCompletedTasksByProject(projectCode);
+        int nonCompletedTaskCount = taskRepository.totalNonCompletedTasksByProject(projectCode);
 
         Map<String, Integer> taskCounts = new HashMap<>();
 
@@ -119,9 +119,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Integer getCountByAssignedEmployee(String assignedEmployee) {
+    public Integer countNonCompletedByAssignedEmployee(String assignedEmployee) {
         checkEmployeeExists(assignedEmployee);
-        return taskRepository.countByAssignedEmployee(assignedEmployee);
+        return taskRepository.countNonCompletedByAssignedEmployee(assignedEmployee);
     }
 
     @Override
