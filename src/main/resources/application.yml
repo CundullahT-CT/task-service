@@ -15,6 +15,9 @@ spring:
     driver-class-name: org.postgresql.Driver
     initialization-mode: always
 
+host:
+  ip: 18.197.20.35
+
 server:
   port: 8083
 
@@ -37,6 +40,8 @@ master:
 
 eureka:
   instance:
+    preferIpAddress: true
+    ipAddress: ${host.ip}
     status-page-url-path: ${management.context-path}/info
     health-check-url-path: ${management.context-path}/health
   client:
@@ -51,4 +56,12 @@ management:
     web:
       exposure:
         include: "*"
-  context-path: http://localhost:${server.port}/actuator
+  context-path: http://${host.ip}:${server.port}/actuator
+
+info:
+  application:
+    name: ${spring.application.name}
+    description: Ticketing Application Task Service
+    version: '@project.version@'
+    spring-cloud-version: '@spring-cloud.version@'
+    spring-boot-version: '@project.parent.version@'
