@@ -256,6 +256,7 @@ public class TaskServiceImpl implements TaskService {
 
     }
 
+    //TODO Refactor TaskDTO and Task Entity to include assignedManager username, and remove the client request below.
     private void checkManagerAccessToProject(String loggedInUserUsername, String projectCode) {
 
         String accessToken = keycloakService.getAccessToken();
