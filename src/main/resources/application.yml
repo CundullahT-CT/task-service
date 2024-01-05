@@ -15,15 +15,12 @@ spring:
     driver-class-name: org.postgresql.Driver
     initialization-mode: always
 
-host:
-  ip: 18.197.20.35
-
 server:
   port: 8083
 
 keycloak:
   realm: cydeo-dev
-  auth-server-url: http://18.185.103.42:8080/auth
+  auth-server-url: http://${KEYCLOAK}:8080/auth
   ssl-required: none
   resource: ticketing-app
   credentials:
@@ -41,12 +38,12 @@ master:
 eureka:
   instance:
     preferIpAddress: true
-    ipAddress: ${host.ip}
+    ipAddress: ${HOST}
     status-page-url-path: ${management.context-path}/info
     health-check-url-path: ${management.context-path}/health
   client:
     serviceUrl:
-      defaultZone: http://3.72.87.233:8761/eureka/
+      defaultZone: http://${EUREKA}:8761/eureka/
 
 management:
   endpoint:
@@ -56,7 +53,7 @@ management:
     web:
       exposure:
         include: "*"
-  context-path: http://${host.ip}:${server.port}/actuator
+  context-path: http://${HOST}:${server.port}/actuator
 
 info:
   application:
@@ -65,3 +62,45 @@ info:
     version: '@project.version@'
     spring-cloud-version: '@spring-cloud.version@'
     spring-boot-version: '@project.parent.version@'
+
+resilience4j:
+
+  circuitbreaker:
+    configs:
+      default:
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        failureRateThreshold: 50
+        permittedNumberOfCallsInHalfOpenState: 2
+        slidingWindowSize: 2
+        waitDurationInOpenState: 10000
+        slidingWindowType: COUNT_BASED
+    instances:
+      project-service:
+        baseConfig: default
+        waitDurationInOpenState: 15000
+      task-service:
+        baseConfig: default
+        waitDurationInOpenState: 20000
+
+  retry:
+    configs:
+      default:
+        maxAttempts: 3
+        waitDuration: 200
+    instances:
+      project-service:
+        baseConfig: default
+      task-service:
+        baseConfig: default
+
+  ratelimiter:
+    configs:
+      default:
+        timeout-duration: 5000
+        limitRefreshPeriod: 5000
+        limitForPeriod: 1
+    instances:
+      project-service:
+        baseConfig: default
+      task-service:
+        baseConfig: default
