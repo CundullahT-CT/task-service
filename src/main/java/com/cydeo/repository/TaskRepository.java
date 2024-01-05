@@ -19,7 +19,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findAllByTaskStatusAndAssignedEmployee(Status status, String assignedEmployee);
 
-    @Query(value = "SELECT * FROM tasks WHERE assigned_employee = :assignedEmployee " +
+    @Query(value = "SELECT COUNT(*) FROM tasks WHERE assigned_employee = :assignedEmployee " +
             "AND task_status <> 'COMPLETED' AND is_deleted = false", nativeQuery = true)
     int countNonCompletedByAssignedEmployee(@Param("assignedEmployee") String assignedEmployee);
 
