@@ -47,7 +47,7 @@ public class TaskServiceImpl implements TaskService {
         }
 
         checkProjectExists(taskDTO.getProjectCode());
-        checkManagerAccess(keycloakService.getUsername(), taskDTO.getProjectCode());
+        checkManagerAccessToProject(keycloakService.getUsername(), taskDTO.getProjectCode());
         checkEmployeeExists(taskDTO.getAssignedEmployee());
 
         Task taskToSave = mapperUtil.convert(taskDTO, new Task());
@@ -74,7 +74,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskDTO> readAllTasksByProject(String projectCode) {
-        checkManagerAccess(keycloakService.getUsername(), projectCode);
+        checkManagerAccessToProject(keycloakService.getUsername(), projectCode);
         List<Task> list = taskRepository.findAllByProjectCode(projectCode);
         return list.stream().map(obj -> mapperUtil.convert(obj, new TaskDTO())).collect(Collectors.toList());
     }
@@ -104,7 +104,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Map<String, Integer> getCountsByProject(String projectCode) {
 
-        checkManagerAccess(keycloakService.getUsername(), projectCode);
+        checkManagerAccessToProject(keycloakService.getUsername(), projectCode);
 
         int completedTaskCount = taskRepository.totalCompletedTasksByProject(projectCode);
         int nonCompletedTaskCount = taskRepository.totalNonCompletedTasksByProject(projectCode);
@@ -120,7 +120,6 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Integer countNonCompletedByAssignedEmployee(String assignedEmployee) {
-        checkEmployeeExists(assignedEmployee);
         return taskRepository.countNonCompletedByAssignedEmployee(assignedEmployee);
     }
 
@@ -131,7 +130,7 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new TaskNotFoundException("Task does not exist."));
 
         checkEmployeeExists(taskDTO.getAssignedEmployee());
-        checkManagerAccess(keycloakService.getUsername(), foundTask.getProjectCode());
+        checkManagerAccessToProject(keycloakService.getUsername(), foundTask.getProjectCode());
         checkProjectExists(taskDTO.getProjectCode());
 
         Task taskToUpdate = mapperUtil.convert(taskDTO, new Task());
@@ -153,7 +152,7 @@ public class TaskServiceImpl implements TaskService {
         Task foundTask = taskRepository.findByTaskCode(taskCode)
                 .orElseThrow(() -> new TaskNotFoundException("Task does not exist."));
 
-        checkEmployeeAccess(keycloakService.getUsername(), foundTask);
+        checkEmployeeAccessToTask(keycloakService.getUsername(), foundTask);
 
         foundTask.setTaskStatus(status);
 
@@ -166,7 +165,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void completeByProject(String projectCode) {
 
-        checkManagerAccess(keycloakService.getUsername(), projectCode);
+        checkManagerAccessToProject(keycloakService.getUsername(), projectCode);
 
         List<Task> tasks = taskRepository.findAllByProjectCode(projectCode);
 
@@ -183,7 +182,7 @@ public class TaskServiceImpl implements TaskService {
         Task taskToDelete = taskRepository.findByTaskCode(taskCode)
                 .orElseThrow(() -> new TaskNotFoundException("Task does not exist."));
 
-        checkManagerAccess(keycloakService.getUsername(), taskToDelete.getProjectCode());
+        checkManagerAccessToProject(keycloakService.getUsername(), taskToDelete.getProjectCode());
 
         taskToDelete.setIsDeleted(true);
         taskToDelete.setTaskCode(taskCode + "-" + taskToDelete.getId());
@@ -195,7 +194,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteByProject(String projectCode) {
 
-        checkManagerAccess(keycloakService.getUsername(), projectCode);
+        checkManagerAccessToProject(keycloakService.getUsername(), projectCode);
 
         List<Task> tasks = taskRepository.findAllByProjectCode(projectCode);
 
@@ -248,16 +247,16 @@ public class TaskServiceImpl implements TaskService {
         String loggedInUserUsername = keycloakService.getUsername();
 
         if (keycloakService.hasClientRole(loggedInUserUsername, "Manager")) {
-            checkManagerAccess(loggedInUserUsername, task.getProjectCode());
+            checkManagerAccessToProject(loggedInUserUsername, task.getProjectCode());
         } else if (keycloakService.hasClientRole(loggedInUserUsername, "Employee")) {
-            checkEmployeeAccess(loggedInUserUsername, task);
+            checkEmployeeAccessToTask(loggedInUserUsername, task);
         } else {
             throw new TaskAccessDeniedException("Access denied.");
         }
 
     }
 
-    private void checkManagerAccess(String loggedInUserUsername, String projectCode) {
+    private void checkManagerAccessToProject(String loggedInUserUsername, String projectCode) {
 
         String accessToken = keycloakService.getAccessToken();
 
@@ -274,7 +273,7 @@ public class TaskServiceImpl implements TaskService {
 
     }
 
-    private void checkEmployeeAccess(String loggedInUserUsername, Task task) {
+    private void checkEmployeeAccessToTask(String loggedInUserUsername, Task task) {
 
         String taskEmployee = task.getAssignedEmployee();
 

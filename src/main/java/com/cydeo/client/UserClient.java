@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-@FeignClient(value = "user-service", url = "http://35.158.120.22:8081")
+@FeignClient(value = "user-service")
 public interface UserClient {
 
-    @GetMapping("/api/v1/user/check/{userName}")
-    ResponseEntity<UserResponseDTO> checkByUserName(@RequestHeader(value = "Authorization") String authorizationHeader, @PathVariable("userName") String userName);
+    @GetMapping("/api/v1/user/check/{username}")
+    ResponseEntity<UserResponseDTO> checkByUserName(@RequestHeader(value = "Authorization") String authorizationHeader, @PathVariable("username") String username);
 
 }
