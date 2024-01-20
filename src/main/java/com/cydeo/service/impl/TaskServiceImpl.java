@@ -2,9 +2,9 @@ package com.cydeo.service.impl;
 
 import com.cydeo.client.ProjectClient;
 import com.cydeo.client.UserClient;
-import com.cydeo.dto.ProjectResponseDTO;
+import com.cydeo.dto.ProjectResponse;
 import com.cydeo.dto.TaskDTO;
-import com.cydeo.dto.UserResponseDTO;
+import com.cydeo.dto.UserResponse;
 import com.cydeo.entity.Task;
 import com.cydeo.enums.Status;
 import com.cydeo.exception.*;
@@ -210,7 +210,7 @@ public class TaskServiceImpl implements TaskService {
 
         String accessToken = keycloakService.getAccessToken();
 
-        ResponseEntity<ProjectResponseDTO> response = projectClient.checkByProjectCode(accessToken, projectCode);
+        ResponseEntity<ProjectResponse> response = projectClient.checkByProjectCode(accessToken, projectCode);
 
         if (!Objects.requireNonNull(response.getBody()).isSuccess()) {
             throw new ProjectCheckFailedException("Project check is failed.");
@@ -230,7 +230,7 @@ public class TaskServiceImpl implements TaskService {
             throw new EmployeeNotFoundException("User is not an employee.");
         }
 
-        ResponseEntity<UserResponseDTO> response = userClient.checkByUserName(accessToken, assignedEmployee);
+        ResponseEntity<UserResponse> response = userClient.checkByUserName(accessToken, assignedEmployee);
 
         if (!Objects.requireNonNull(response.getBody()).isSuccess()) {
             throw new EmployeeCheckFailedException("Employee check is failed.");
@@ -261,7 +261,7 @@ public class TaskServiceImpl implements TaskService {
 
         String accessToken = keycloakService.getAccessToken();
 
-        ResponseEntity<ProjectResponseDTO> response = projectClient.getManagerByProjectCode(accessToken, projectCode);
+        ResponseEntity<ProjectResponse> response = projectClient.getManagerByProjectCode(accessToken, projectCode);
 
         if (Objects.requireNonNull(response.getBody()).isSuccess()) {
             String taskManager = (String) response.getBody().getData();
