@@ -104,8 +104,6 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Map<String, Integer> getCountsByProject(String projectCode) {
 
-        checkManagerAccessToProject(keycloakService.getUsername(), projectCode);
-
         int completedTaskCount = taskRepository.totalCompletedTasksByProject(projectCode);
         int nonCompletedTaskCount = taskRepository.totalNonCompletedTasksByProject(projectCode);
 
