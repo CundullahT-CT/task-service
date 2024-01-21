@@ -36,4 +36,7 @@ public class Task extends BaseEntity {
     @Column(nullable = false)
     private String assignedEmployee;
 
+    @Column(nullable = false)
+    private String assignedManager;
+
 }

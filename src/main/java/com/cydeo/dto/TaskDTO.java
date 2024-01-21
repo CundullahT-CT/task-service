@@ -27,14 +27,14 @@ public class TaskDTO {
     private String taskCode;
 
     @NotBlank(message = "Task subject is required.")
-    @Size(min = 3, max = 16, message = "Task subject length should be min 2, max 16.")
+    @Size(min = 3, max = 16, message = "Task subject length should be min 3, max 16.")
     private String taskSubject;
 
     private String taskDetail;
     private Status taskStatus;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDate assignedDate;
 
     @NotBlank(message = "Project code is required.")
@@ -42,5 +42,8 @@ public class TaskDTO {
 
     @NotBlank(message = "Assigned employee is required.")
     private String assignedEmployee;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String assignedManager;
 
 }

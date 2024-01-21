@@ -12,53 +12,54 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition
 public class OpenAPI3Configuration {
 
-        private static final String OAUTH_SCHEME_NAME = "oAuth";
-        private static final String PROTOCOL_URL_FORMAT = "%s/realms/%s/protocol/openid-connect";
+    private static final String OAUTH_SCHEME_NAME = "oAuth";
+    private static final String PROTOCOL_URL_FORMAT = "%s/realms/%s/protocol/openid-connect";
 
-        private final KeycloakProperties keycloakProperties;
+    private final KeycloakProperties keycloakProperties;
 
-        public OpenAPI3Configuration(KeycloakProperties keycloakProperties) {
-                this.keycloakProperties = keycloakProperties;
-        }
+    public OpenAPI3Configuration(KeycloakProperties keycloakProperties) {
+        this.keycloakProperties = keycloakProperties;
+    }
 
-        @Bean
-        public OpenAPI customOpenApi() {
-                return new OpenAPI()
-                        .info(getInfo())
-                        .components(new Components()
-                                .addSecuritySchemes(OAUTH_SCHEME_NAME, createOAuthScheme()))
-                        .addSecurityItem(new SecurityRequirement().addList(OAUTH_SCHEME_NAME));
-        }
+    @Bean
+    public OpenAPI customOpenApi() {
+        return new OpenAPI()
+                .info(getInfo())
+                .components(new Components()
+                        .addSecuritySchemes(OAUTH_SCHEME_NAME, createOAuthScheme()))
+                .addSecurityItem(new SecurityRequirement().addList(OAUTH_SCHEME_NAME));
+    }
 
-        private Info getInfo() {
-                return new Info()
-                        .title("Task API Doc")
-                        .description("API documentation for Ticketing App Task Operations")
-                        .version("v1.0");
-        }
+    private Info getInfo() {
+        return new Info()
+                .title("Task API Doc")
+                .description("API documentation for Ticketing App Task Operations")
+                .version("v1.0");
+    }
 
-        private SecurityScheme createOAuthScheme() {
-                OAuthFlows flows = createOAuthFlows();
+    private SecurityScheme createOAuthScheme() {
+        OAuthFlows flows = createOAuthFlows();
+        return new SecurityScheme()
+                .type(SecurityScheme.Type.OAUTH2)
+                .flows(flows);
+    }
 
-                return new SecurityScheme()
-                        .type(SecurityScheme.Type.OAUTH2)
-                        .flows(flows);
-        }
+    private OAuthFlows createOAuthFlows() {
+        OAuthFlow flow = createAuthorizationCodeFlow();
+        return new OAuthFlows()
+                .authorizationCode(flow);
+    }
 
-        private OAuthFlows createOAuthFlows() {
-                OAuthFlow flow = createAuthorizationCodeFlow();
+    private OAuthFlow createAuthorizationCodeFlow() {
 
-                return new OAuthFlows()
-                        .authorizationCode(flow);
-        }
+        String protocolUrl = String.format(PROTOCOL_URL_FORMAT,
+                keycloakProperties.getAuthServerUrl(), keycloakProperties.getRealm());
 
-        private OAuthFlow createAuthorizationCodeFlow() {
-                var protocolUrl = String.format(PROTOCOL_URL_FORMAT,
-                        keycloakProperties.getAuthServerUrl(), keycloakProperties.getRealm());
+        return new OAuthFlow()
+                .authorizationUrl(protocolUrl + "/auth")
+                .tokenUrl(protocolUrl + "/token")
+                .scopes(new Scopes().addString("openid", ""));
 
-                return new OAuthFlow()
-                        .authorizationUrl(protocolUrl + "/auth")
-                        .tokenUrl(protocolUrl + "/token")
-                        .scopes(new Scopes().addString("openid", ""));
-        }
+    }
+
 }

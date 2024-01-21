@@ -49,7 +49,7 @@ public class KeycloakServiceImpl implements KeycloakService {
             List<UserRepresentation> userRepresentations = usersResource.search(username);
 
             if (userRepresentations.isEmpty()) {
-                throw new UserNotFoundException("User not found!");
+                throw new UserNotFoundException("User does not exist.");
             }
 
             ClientRepresentation appClient = realmResource.clients()
