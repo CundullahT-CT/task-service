@@ -95,16 +95,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Map<String, Long> getCountsByProject(String projectCode) {
+    public Map<String, Integer> getCountsByProject(String projectCode) {
 
         List<Task> tasks = taskRepository.findAllByProjectCode(projectCode);
 
         tasks.forEach(this::checkAccess);
 
-        long completedTaskCount = tasks.stream().filter(task -> task.getTaskStatus().equals(Status.COMPLETED)).count();
-        long nonCompletedTaskCount = tasks.stream().filter(task -> !task.getTaskStatus().equals(Status.COMPLETED)).count();
+        int completedTaskCount = (int) tasks.stream().filter(task -> task.getTaskStatus().equals(Status.COMPLETED)).count();
+        int nonCompletedTaskCount = (int) tasks.stream().filter(task -> !task.getTaskStatus().equals(Status.COMPLETED)).count();
 
-        Map<String, Long> taskCounts = new HashMap<>();
+        Map<String, Integer> taskCounts = new HashMap<>();
 
         taskCounts.put("completedTaskCount", completedTaskCount);
         taskCounts.put("nonCompletedTaskCount", nonCompletedTaskCount);

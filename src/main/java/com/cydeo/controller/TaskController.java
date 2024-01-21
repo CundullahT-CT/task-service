@@ -230,7 +230,7 @@ public class TaskController {
                             examples = @ExampleObject(value = SwaggerExamples.ACCESS_DENIED_FORBIDDEN_RESPONSE_EXAMPLE)))})
     public ResponseEntity<ResponseWrapper> getCountsByProject(@PathVariable("projectCode") String projectCode) {
 
-        Map<String, Long> taskCounts = taskService.getCountsByProject(projectCode);
+        Map<String, Integer> taskCounts = taskService.getCountsByProject(projectCode);
 
         return ResponseEntity
                 .ok(ResponseWrapper.builder()
